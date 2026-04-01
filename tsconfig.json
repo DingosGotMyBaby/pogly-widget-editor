@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }],
+  "compilerOptions": {
+    "target": "es2021",
+    "lib": ["ES6", "dom", "dom.iterable", "esnext"]
+  }
+}

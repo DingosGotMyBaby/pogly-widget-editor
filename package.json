@@ -1,0 +1,50 @@
+{
+  "name": "pogly-widget-editor",
+  "version": "1.0.0",
+  "description": "Standalone widget editor for Pogly",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "dist": "electron-vite build && electron-builder"
+  },
+  "build": {
+    "appId": "app.pogly.widget-editor",
+    "productName": "Pogly Widget Editor",
+    "directories": {
+      "output": "dist"
+    },
+    "files": ["out/**/*"],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "lucide-react": "^0.577.0",
+    "react": "^18.2.0",
+    "react-colorful": "^5.6.1",
+    "react-dom": "^18.2.0",
+    "react-moveable": "^0.56.0",
+    "styled-components": "^6.1.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^34.0.0",
+    "electron-builder": "^25.0.0",
+    "electron-vite": "^2.3.0",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.3.3"
+  }
+}
