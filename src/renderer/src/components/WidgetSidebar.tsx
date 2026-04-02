@@ -1,12 +1,7 @@
 import { BookOpen, Info, LayoutDashboard, MonitorPlay, Settings, SlidersHorizontal } from "lucide-react";
 import styled from "styled-components";
-import { TabId } from "../types/EditorTypes";
+import { TabId, TAB_CONTROLS, TAB_EXPORT, TAB_IMPORT, TAB_PREVIEW, TAB_README, TAB_SETTINGS, TAB_VARIABLES } from "../types/EditorTypes";
 import { HoverTooltip } from "./general/HoverTooltip";
-
-const VARIABLES_DOT_COLOR = "#a78bfa";
-const CONTROLS_DOT_COLOR = "#4ade80";
-const README_DOT_COLOR = "#94a3b8";
-const SETTINGS_DOT_COLOR = "#f59e0b";
 
 interface IProps {
   activeTab: TabId | null;
@@ -18,15 +13,15 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
   <Sidebar>
     <SidebarGroupLabel>Usage</SidebarGroupLabel>
 
-    <SidebarRow $active={activeTab === "controls"} onClick={() => openTab("controls")}>
-      <LayoutDashboard size={12} style={{ color: CONTROLS_DOT_COLOR, flexShrink: 0 }} />
+    <SidebarRow $active={activeTab?.id === "controls"} onClick={() => openTab(TAB_CONTROLS)}>
+      <LayoutDashboard size={12} style={{ color: TAB_CONTROLS.color, flexShrink: 0 }} />
       <TabText>controls</TabText>
     </SidebarRow>
 
-    <SidebarRow $active={activeTab === "preview"} onClick={() => openTab("preview")}>
+    <SidebarRow $active={activeTab?.id === "preview"} onClick={() => openTab(TAB_PREVIEW)}>
       <MonitorPlay
         size={12}
-        style={{ color: "#22d3ee", alignSelf: "center", display: "flex", justifySelf: "center" }}
+        style={{ color: TAB_PREVIEW.color, alignSelf: "center", display: "flex", justifySelf: "center" }}
       />
       <TabText>preview</TabText>
     </SidebarRow>
@@ -36,8 +31,8 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
     <SidebarGroupLabel>Explorer</SidebarGroupLabel>
 
     {files.map((file: any) => (
-      <SidebarRow key={file.id} $active={activeTab === file.id} onClick={() => openTab(file.id)}>
-        <Dot style={{ background: file.dotColor }} />
+      <SidebarRow key={file.id} $active={activeTab?.id === file.id} onClick={() => openTab(file)}>
+        <Dot style={{ background: file.color }} />
         <TabText>{file.filename}</TabText>
       </SidebarRow>
     ))}
@@ -66,8 +61,8 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
       </HoverTooltip>
     </SidebarGroupLabel>
 
-    <SidebarRow $active={activeTab === "variables"} onClick={() => openTab("variables")}>
-      <SlidersHorizontal size={12} style={{ color: VARIABLES_DOT_COLOR, flexShrink: 0 }} />
+    <SidebarRow $active={activeTab?.id === "variables"} onClick={() => openTab(TAB_VARIABLES)}>
+      <SlidersHorizontal size={12} style={{ color: TAB_VARIABLES.color, flexShrink: 0 }} />
       <TabText>variables</TabText>
     </SidebarRow>
 
@@ -75,13 +70,13 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
 
     <SidebarGroupLabel>Actions</SidebarGroupLabel>
 
-    <SidebarRow $active={activeTab === "import"} onClick={() => openTab("import")}>
-      <Dot style={{ background: "#f472b6" }} />
+    <SidebarRow $active={activeTab?.id === "import"} onClick={() => openTab(TAB_IMPORT)}>
+      <Dot style={{ background: TAB_IMPORT.color }} />
       <TabText>import</TabText>
     </SidebarRow>
 
-    <SidebarRow $active={activeTab === "export"} onClick={() => openTab("export")}>
-      <Dot style={{ background: "#34d399" }} />
+    <SidebarRow $active={activeTab?.id === "export"} onClick={() => openTab(TAB_EXPORT)}>
+      <Dot style={{ background: TAB_EXPORT.color }} />
       <TabText>export</TabText>
     </SidebarRow>
 
@@ -89,8 +84,8 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
 
     <SidebarGroupLabel>Preferences</SidebarGroupLabel>
 
-    <SidebarRow $active={activeTab === "settings"} onClick={() => openTab("settings")}>
-      <Settings size={12} style={{ color: SETTINGS_DOT_COLOR, flexShrink: 0 }} />
+    <SidebarRow $active={activeTab?.id === "settings"} onClick={() => openTab(TAB_SETTINGS)}>
+      <Settings size={12} style={{ color: TAB_SETTINGS.color, flexShrink: 0 }} />
       <TabText>settings</TabText>
     </SidebarRow>
 
@@ -98,8 +93,8 @@ const WidgetSidebar = ({ activeTab, openTab, files }: IProps) => (
 
     <SidebarGroupLabel>Help</SidebarGroupLabel>
 
-    <SidebarRow $active={activeTab === "readme"} onClick={() => openTab("readme")}>
-      <BookOpen size={12} style={{ color: README_DOT_COLOR, flexShrink: 0 }} />
+    <SidebarRow $active={activeTab?.id === "readme"} onClick={() => openTab(TAB_README)}>
+      <BookOpen size={12} style={{ color: TAB_README.color, flexShrink: 0 }} />
       <TabText>readme</TabText>
     </SidebarRow>
   </Sidebar>

@@ -12,20 +12,18 @@ import WidgetCodeEditor from "./WidgetCodeEditor";
 import WidgetPreview from "./WidgetPreview";
 import WidgetReadme from "./WidgetReadme";
 import WidgetFooter from "./WidgetFooter";
-import { TabId } from "../types/EditorTypes";
+import { TabId, TAB_CONTROLS, TAB_IMPORT, TAB_PREVIEW } from "../types/EditorTypes";
 
-interface EditorFile {
-  id: Exclude<TabId, "controls" | "settings" | "variables" | "import" | "export" | "readme" | "preview">;
+interface EditorFile extends TabId {
   filename: string;
   monacoLanguage: string;
-  dotColor: string;
 }
 
 const EDITOR_FILES: EditorFile[] = [
-  { id: "header", filename: "header.html", monacoLanguage: "html", dotColor: "#fb923c" },
-  { id: "body", filename: "body.html", monacoLanguage: "html", dotColor: "#fb923c" },
-  { id: "style", filename: "style.css", monacoLanguage: "css", dotColor: "#38bdf8" },
-  { id: "script", filename: "script.js", monacoLanguage: "javascript", dotColor: "#facc15" },
+  { id: "header", color: "#fb923c", label: "header.html", filename: "header.html", monacoLanguage: "html" },
+  { id: "body", color: "#fb923c", label: "body.html", filename: "body.html", monacoLanguage: "html" },
+  { id: "style", color: "#38bdf8", label: "style.css", filename: "style.css", monacoLanguage: "css" },
+  { id: "script", color: "#facc15", label: "script.js", filename: "script.js", monacoLanguage: "javascript" },
 ];
 
 const PREVIEW_SPLIT_KEY = "widgetIDE_previewSplit";
@@ -54,11 +52,11 @@ export const WidgetEditor = ({
   onNew,
   onOpen,
 }: IProps) => {
-  const [openTabs, setOpenTabs] = useState<TabId[]>(["controls"]);
-  const [activeTab, setActiveTab] = useState<TabId | null>("controls");
+  const [openTabs, setOpenTabs] = useState<TabId[]>([TAB_CONTROLS]);
+  const [activeTab, setActiveTab] = useState<TabId | null>(TAB_CONTROLS);
   const tabStripRef = useRef<HTMLDivElement>(null);
   const editorPaneRef = useRef<HTMLDivElement>(null);
-  const lastNonPreviewTabRef = useRef<TabId | null>("controls");
+  const lastNonPreviewTabRef = useRef<TabId | null>(TAB_CONTROLS);
 
   const [widgetError, setWidgetError] = useState<string | null>(null);
   const [showWarning, setShowWarning] = useState(false);
@@ -79,12 +77,10 @@ export const WidgetEditor = ({
   }, [previewSplitPercent]);
   const [isResizingPreview, setIsResizingPreview] = useState(false);
 
-  // Keep lastNonPreviewTabRef current
   useEffect(() => {
-    if (activeTab && activeTab !== "preview") lastNonPreviewTabRef.current = activeTab;
+    if (activeTab && activeTab.id !== "preview") lastNonPreviewTabRef.current = activeTab;
   }, [activeTab]);
 
-  // Tab strip horizontal scroll on wheel
   useEffect(() => {
     const el = tabStripRef.current;
     if (!el) return;
@@ -97,7 +93,6 @@ export const WidgetEditor = ({
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
-  // Ctrl+S shortcut
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
@@ -109,23 +104,22 @@ export const WidgetEditor = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [onSave]);
 
-  // Scroll active tab into view
   useEffect(() => {
     if (!tabStripRef.current || !activeTab) return;
     tabStripRef.current
-      .querySelector<HTMLElement>(`[data-tab="${activeTab}"]`)
+      .querySelector<HTMLElement>(`[data-tab="${activeTab?.id}"]`)
       ?.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [activeTab]);
 
   const openTab = (id: TabId) => {
-    setOpenTabs((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setOpenTabs((prev) => (prev.some((t) => t.id === id.id) ? prev : [...prev, id]));
     setActiveTab(id);
   };
 
   const closeTabById = (id: TabId) => {
-    const remaining = openTabs.filter((t) => t !== id);
+    const remaining = openTabs.filter((t) => t.id !== id.id);
     setOpenTabs(remaining);
-    if (activeTab === id) setActiveTab(remaining.length > 0 ? remaining[remaining.length - 1] : null);
+    if (activeTab?.id === id.id) setActiveTab(remaining.length > 0 ? remaining[remaining.length - 1] : null);
   };
 
   const closeTab = (id: TabId, e: React.MouseEvent) => {
@@ -133,7 +127,6 @@ export const WidgetEditor = ({
     closeTabById(id);
   };
 
-  // Partial update helpers
   const set = (patch: Partial<WidgetData>) => onChange({ ...value, ...patch });
 
   const setVariables = (v: WidgetVariableType[] | ((prev: WidgetVariableType[]) => WidgetVariableType[])) => {
@@ -164,7 +157,7 @@ export const WidgetEditor = ({
         variables: parsed.variables || [],
       });
       setImportCode("");
-      closeTabById("import");
+      closeTabById(TAB_IMPORT);
     } catch {
       setImportError("Widget JSON does not parse.");
     }
@@ -200,14 +193,14 @@ export const WidgetEditor = ({
     document.addEventListener("mouseup", onMouseUp);
   };
 
-  const previewIsOpen = openTabs.includes("preview");
-  const showSplitView = previewIsOpen && openTabs.some((t) => t !== "preview");
-  const editorDisplayTab = activeTab === "preview" ? lastNonPreviewTabRef.current : activeTab;
+  const previewIsOpen = openTabs.some((t) => t.id === "preview");
+  const showSplitView = previewIsOpen && openTabs.some((t) => t.id !== "preview");
+  const editorDisplayTab = activeTab?.id === "preview" ? lastNonPreviewTabRef.current : activeTab;
 
   const activeFile =
     editorDisplayTab &&
-    !["controls", "settings", "variables", "import", "export", "readme", "preview"].includes(editorDisplayTab)
-      ? (EDITOR_FILES.find((f) => f.id === editorDisplayTab) ?? null)
+    !["controls", "settings", "variables", "import", "export", "readme", "preview"].includes(editorDisplayTab.id)
+      ? (EDITOR_FILES.find((f) => f.id === editorDisplayTab.id) ?? null)
       : null;
 
   const handleWidgetNameChange = (v: string) => {
@@ -258,7 +251,6 @@ export const WidgetEditor = ({
           )}
 
           <EditorPane ref={editorPaneRef} style={showSplitView ? { display: "flex", flexDirection: "row" } : undefined}>
-            {/* Editor content area */}
             <div
               style={
                 showSplitView
@@ -272,7 +264,7 @@ export const WidgetEditor = ({
                   : { display: "contents" }
               }
             >
-              {(editorDisplayTab === null || openTabs.filter((t) => t !== "preview").length === 0) &&
+              {(editorDisplayTab === null || openTabs.filter((t) => t.id !== "preview").length === 0) &&
                 !showSplitView && (
                   <EmptyState>
                     <Code2 size={32} className="text-border mb-2" />
@@ -280,7 +272,7 @@ export const WidgetEditor = ({
                   </EmptyState>
                 )}
 
-              {editorDisplayTab === "controls" && (
+              {editorDisplayTab?.id === "controls" && (
                 <WidgetControlsView
                   variables={value.variables}
                   setVariables={setVariables}
@@ -293,7 +285,7 @@ export const WidgetEditor = ({
                 />
               )}
 
-              {editorDisplayTab === "variables" && (
+              {editorDisplayTab?.id === "variables" && (
                 <div className="p-5 h-full overflow-y-scroll">
                   <WidgetInfo />
                   <WidgetVariableTable
@@ -305,7 +297,7 @@ export const WidgetEditor = ({
                 </div>
               )}
 
-              {editorDisplayTab === "export" && (
+              {editorDisplayTab?.id === "export" && (
                 <div className="p-5 h-full flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <span className="text-[12px] text-text-muted">Widget JSON (read-only)</span>
@@ -321,7 +313,7 @@ export const WidgetEditor = ({
                 </div>
               )}
 
-              {editorDisplayTab === "import" && (
+              {editorDisplayTab?.id === "import" && (
                 <div className="p-5 h-full flex flex-col gap-3">
                   <span className="text-[12px] text-text-muted">Paste widget JSON below</span>
                   <ExportTextarea
@@ -344,7 +336,7 @@ export const WidgetEditor = ({
                 </div>
               )}
 
-              {editorDisplayTab === "settings" && (
+              {editorDisplayTab?.id === "settings" && (
                 <div className="p-6 overflow-auto h-full">
                   <SettingsCard>
                     <SettingsLabel>save location</SettingsLabel>
@@ -363,7 +355,7 @@ export const WidgetEditor = ({
                 </div>
               )}
 
-              {editorDisplayTab === "readme" && <WidgetReadme />}
+              {editorDisplayTab?.id === "readme" && <WidgetReadme />}
 
               {activeFile && (
                 <WidgetCodeEditor

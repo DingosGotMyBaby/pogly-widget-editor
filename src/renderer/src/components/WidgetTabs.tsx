@@ -3,11 +3,6 @@ import { Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { TabId } from "../types/EditorTypes";
 
-const VARIABLES_DOT_COLOR = "#a78bfa";
-const CONTROLS_DOT_COLOR = "#4ade80";
-const README_DOT_COLOR = "#94a3b8";
-const SETTINGS_DOT_COLOR = "#f59e0b";
-
 interface IProps {
   tabStripRef: any;
   openTabs: TabId[];
@@ -17,50 +12,15 @@ interface IProps {
   closeTab: (id: TabId, e: React.MouseEvent) => void;
 }
 
-const WidgetTabs = ({ tabStripRef, openTabs, activeTab, editorFiles, setActiveTab, closeTab }: IProps) => (
+const WidgetTabs = ({ tabStripRef, openTabs, activeTab, editorFiles: _editorFiles, setActiveTab, closeTab }: IProps) => (
   <TabStrip ref={tabStripRef}>
     {openTabs.map((tabId) => {
-      const file = editorFiles.find((f: any) => f.id === tabId);
-      const isActive = activeTab === tabId;
-
-      const dotColor =
-        tabId === "controls"
-          ? CONTROLS_DOT_COLOR
-          : tabId === "settings"
-            ? SETTINGS_DOT_COLOR
-            : tabId === "variables"
-              ? VARIABLES_DOT_COLOR
-              : tabId === "export"
-                ? "#34d399"
-                : tabId === "import"
-                  ? "#f472b6"
-                  : tabId === "readme"
-                    ? README_DOT_COLOR
-                    : tabId === "preview"
-                      ? "#22d3ee"
-                      : (file?.dotColor ?? "var(--color-text-muted)");
-
-      const label =
-        tabId === "controls"
-          ? "controls"
-          : tabId === "settings"
-            ? "settings"
-            : tabId === "variables"
-              ? "variables"
-              : tabId === "export"
-                ? "export.json"
-                : tabId === "import"
-                  ? "import.json"
-                  : tabId === "readme"
-                    ? "readme.md"
-                    : tabId === "preview"
-                      ? "preview"
-                      : (file?.filename ?? tabId);
+      const isActive = activeTab?.id === tabId.id;
 
       return (
         <Tab
-          key={tabId}
-          data-tab={tabId}
+          key={tabId.id}
+          data-tab={tabId.id}
           $active={isActive}
           onClick={() => setActiveTab(tabId)}
           onMouseDown={(e) => {
@@ -68,8 +28,8 @@ const WidgetTabs = ({ tabStripRef, openTabs, activeTab, editorFiles, setActiveTa
             closeTab(tabId, e);
           }}
         >
-          <Dot style={{ background: dotColor, width: 7, height: 7 }} />
-          <span>{label}</span>
+          <Dot style={{ background: tabId.color, width: 7, height: 7 }} />
+          <span>{tabId.label}</span>
           <TabCloseBtn onClick={(e) => closeTab(tabId, e)} title="close tab">
             <X size={10} fill="#edf1ff" />
           </TabCloseBtn>
