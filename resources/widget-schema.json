@@ -1,0 +1,59 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Pogly Widget",
+    "type": "object",
+    "required": ["widgetName", "widgetWidth", "widgetHeight", "headerTag", "bodyTag", "styleTag", "scriptTag", "variables"],
+    "properties": {
+        "widgetName": {
+            "type": "string",
+            "description": "The display name of your widget."
+        },
+        "widgetWidth": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Base width of the widget in pixels."
+        },
+        "widgetHeight": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Base height of the widget in pixels."
+        },
+        "headerTag": {
+            "type": "string",
+            "description": "HTML content added to the <head> tag."
+        },
+        "bodyTag": {
+            "type": "string",
+            "description": "HTML content for the widget body."
+        },
+        "styleTag": {
+            "type": "string",
+            "description": "CSS styles for the widget."
+        },
+        "scriptTag": {
+            "type": "string",
+            "description": "JavaScript logic for the widget."
+        },
+        "variables": {
+            "type": "array",
+            "description": "Custom variables available in the widget code via {VariableName}.",
+            "items": {
+                "type": "object",
+                "required": ["variableName", "variableType", "variableValue"],
+                "properties": {
+                    "variableName": {
+                        "type": "string"
+                    },
+                    "variableType": {
+                        "type": "integer",
+                        "enum": [1, 2, 3, 4, 5],
+                        "description": "1: string, 2: boolean, 3: toggle, 4: color, 5: image"
+                    },
+                    "variableValue": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

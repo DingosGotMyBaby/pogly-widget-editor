@@ -1,0 +1,36 @@
+{
+  "widgetName": "Text - Color Gradient",
+  "widgetWidth": 400,
+  "widgetHeight": 200,
+  "headerTag": "<!-- I like traffic lights -->",
+  "bodyTag": "<div class=\"wrapper\">\n\t<h1>{Text}</h1>\n</div>",
+  "styleTag": "$avatar-size: 32px;\n$body-background: #FF0000;\n\n@font-face {\n\tfont-family: \"ubuntu\";\n\tfont-style: italic;\n\tfont-weight: 300;\n\tsrc: local(\"Lato Light Italic\"), local(\"Lato-LightItalic\"),\n\t\turl(https://fonts.gstatic.com/s/ubuntucondensed/v8/u-4k0rCzjgs5J7oXnJcM_0kACGMtT-Dfqw.woff2)\n\t\t\tformat(\"woff2\");\n}\n\nbody {\n\theight: 100vh;\n\tmargin: 0;\n\tbackground-color: $body-background;\n\tfont-family: \"ubuntu\", Arial, sans-serif;\n\toverflow-x: hidden;\n\tdisplay: grid;\n\tplace-items: center;\n}\n\na {\n\ttext-decoration: none;\n\tcolor: #1435c7;\n}\n\n.wrapper {\n\ttext-align: center;\n\th1 {\n\t\tcolor: #b92b2b;\n\t\tfont-size: {Size}px;\n\t\ttext-transform: uppercase;\n\t\tfont-weight: 700;\n\t\tfont-family: \"Josefin Sans\", sans-serif;\n\t\tbackground: linear-gradient(to right,{Color1} 10%, {Color2} 50%, {Color3} 60%);\n\t\tbackground-size: auto auto;\n\t\tbackground-clip: border-box;\n\t\tbackground-size: 200% auto;\n\t\tbackground-clip: text;\n\t\ttext-fill-color: transparent;\n\t\t-webkit-background-clip: text;\n\t\t-webkit-text-fill-color: transparent;\n\t\tanimation: textclip 1.5s linear infinite;\n\t\tdisplay: inline-block;\n\t}\n}\n\n@keyframes textclip {\n\tto {\n\t\tbackground-position: 200% center;\n\t}\n}\n",
+  "scriptTag": "",
+  "variables": [
+    {
+      "variableName": "Text",
+      "variableType": 1,
+      "variableValue": "I got it fucking working"
+    },
+    {
+      "variableName": "Size",
+      "variableType": 1,
+      "variableValue": "21"
+    },
+    {
+      "variableName": "Color1",
+      "variableType": 4,
+      "variableValue": "#ab096c"
+    },
+    {
+      "variableName": "Color2",
+      "variableType": 4,
+      "variableValue": "#fb5bf7"
+    },
+    {
+      "variableName": "Color3",
+      "variableType": 4,
+      "variableValue": "#331eff"
+    }
+  ]
+}

@@ -1,3 +1,10 @@
-electron.vite.config.ts
-/node_modules
-/out
+node_modules
+out
+dist
+.vscode-test
+*.vsix
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
