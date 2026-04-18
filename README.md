@@ -6,7 +6,7 @@ This extension transforms the experience of editing `*.widget.json` files by pro
 
 ## Major Disclaimer
 
-This was created using the Gemini CLI by converting the [amazing work that Dynny did](https://github.com/PoglyApp/pogly-widget-editor) and turning it into literal shit. The "author" (Dingo) of this extension if a lazy cunt and couldn't be fucked doing it himself.
+This was created using the Gemini CLI by converting the [amazing work that Dynny did](https://github.com/PoglyApp/pogly-widget-editor) and turning it into literal shit. The "author" (Dingo) of this extension is a lazy cunt and couldn't be fucked doing it himself.
 
 ## 🚀 Features
 
